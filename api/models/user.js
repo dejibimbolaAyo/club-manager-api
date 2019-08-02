@@ -81,4 +81,8 @@ userSchema.methods.comparePassword = (plainPassword) => {
     return crypt.compareHash(salted, this.hash);
 };
 
+userSchema.post("create", (next) => {
+    next()
+})
+
 module.exports = mongoose.model('User', userSchema, 'users');
