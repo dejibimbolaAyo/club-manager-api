@@ -1,4 +1,4 @@
-import io from "../../connections/socket"
+import {emitEvent, broadcastUserEvent} from "../../connections/socket"
 const User = require("../models/user");
 
 exports.create = async function (data) {
@@ -9,23 +9,87 @@ exports.create = async function (data) {
   user.hash = await user.hashPassword(user.salt, data.password);
 
   user.save();
-  //   emitEvent(user)
-  io.on('connection', (socket) => {
-    socket.on('fetchMembers', (data) => {
-        console.log("From client", data)
-    //   console.log('client is subscribing to timer with interval ', socket);
-      socket.emit('newUser', user);
-      console.log("")
-    });
-  });
-  // console.log(io);
+  broadcastUserEvent(user, 'newMember', '/users')
+
   return user;
 };
 
+exports.find = function (query) {
+  const result =  User.find({
+    $or: [
+      {
+        "firstName": {
+          $regex: '.*' + query + '.*',
+          $options: 'gi'
+        }
+      }, {
+        "lastName": {
+          $regex: '.*' + query + '.*',
+          $options: 'gi'
+        }
+      }
+    ]
+  })
+
+  if(!result) {
+    return {
+      status: false,
+      message: "Resutl not found for query"
+    }
+  }
+
+  return {
+    status: true,
+    message: "Result found",
+    data: result
+  }
+}
+
 exports.findOneById = function (query) {
-  return User.findById(query);
+  const user = User.findById(query);
+
+  if(!user) {
+    return {
+      status: false,
+      message: `${query} not found.`
+    }
+  }
+
+  return {
+    status: true,
+    data: user
+  }
 };
 
-exports.findAll = function (query) {
-  return User.find(query);
+exports.findByEmail = async function (query) {
+  const user = await User.findOne().byEmail(query);
+
+  if(!user) {
+    return {
+      status: false,
+      message: `${query} not found.`
+    }
+  }
+
+  return {
+    status: true,
+    data: user
+  }
+};
+
+exports.findAll = async function (query) {
+  const users = await User.find(query);
+
+  if(!users) {
+    return {
+      status: false,
+      message: "Users not found"
+    }
+  }
+
+  return {
+    status: true,
+    message: "Users found",
+    data: users
+  };
 }

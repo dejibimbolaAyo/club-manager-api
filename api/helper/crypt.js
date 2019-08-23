@@ -1,4 +1,4 @@
-import { hash, compare, genSaltSync} from "bcrypt";
+import {hash, compare, genSaltSync} from "bcrypt";
 const saltRounds = 10;
 /**
  * Generate crypt and decrypt
@@ -6,17 +6,18 @@ const saltRounds = 10;
  */
 
 exports.getHash = (plainString) => {
-    return hash(plainString, saltRounds)
-        .then((hash) => hash)
-        .catch((e) => console.log(e.message));
- }
+  return hash(plainString, saltRounds).then((hash) => hash).catch((e) => console.log(e.message));
+}
 
- exports.getSalt = (length) => {
-    return genSaltSync(length)
- }
+exports.getSalt = (length) => {
+  return genSaltSync(length)
+}
 
- exports.compareHash = (salted, hash) => {
-    return compare(salted, hash)
-        .then((res) => res)
-        .catch((e) => console.log(e.message));
- }
+exports.compareHash = async (salted, hash) => {
+    const result = await compare(salted, hash)
+  
+    if (result) {
+      return {status: result, message: "Password is valid"}
+    }
+    return {status: result, message: "Password is invalid"}
+}

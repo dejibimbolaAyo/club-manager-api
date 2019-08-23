@@ -3,7 +3,7 @@ const dotenv = require('dotenv').config();
 
 export const nodeEnv = dotenv.NODE_ENV || 'development';
 
-export const appName = dotenv.APP_NAME || 'Quick server';
+export const appName = dotenv.APP_NAME || 'BE_MY_GUEST';
 
 export const logStars = (message) => {
     console.info('****************');
@@ -14,6 +14,6 @@ export const logStars = (message) => {
 export const jwtSecret = dotenv.JWT_SECRET || '';
 
 export const address =  {
-    port: dotenv.PORT || 8000,
+    port: dotenv.PORT || 5000,
     hostname: dotenv.HOSTNAME || 'localhost'
 };

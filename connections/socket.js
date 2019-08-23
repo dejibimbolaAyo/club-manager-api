@@ -1,16 +1,51 @@
-const io = require('socket.io')();
-
 const port = process.env.SOCKET_PORT || 9000;
-io.listen(port);
 
+const options = {
+  allowUpgrades: true,
+  transports: [
+    'websocket', 'polling'
+  ],
+  pingTimeout: 9000,
+  pingInterval: 3000,
+  httpCompression: true,
+  origins: '*:*'
+};
+
+const io = require('socket.io')(port, options);
 console.log("Socket connection created on port", port)
 
-io.on('connection', (socket) => {
-  socket.on('fetchMembers', () => {
-    // console.log('client is subscribing to timer with interval ', data);
-    socket.emit('newUser', "This is it...this is who we are, this is out reality");
-    console.log("")
-  });
-});
+// Initialize namespaces
+let defaultNsp = io
+let userNsp = io.of('/users')
+let broadcastNsp = io.of('.broadcast')
+
+// Open connections
+userNsp.send('opened', "Connection opened")
+broadcastNsp.send('opened', "Broadcast connection opened")
+
+export const emitEvent = (data, eventType, nameSpace) => {
+  data = {
+    eventType,
+    data
+  }
+
+  let nsp = io.of(nameSpace || '/')
+
+  nsp.on('connection', (client) => {
+    client.on(eventType, (params) => {
+      client.emit(eventType, data);
+    })
+
+  })
+  console.log("Namespace listeners", nsp.getMaxListeners())
+}
+
+export const broadcastUserEvent = (data, eventType, nameSpace) => {
+  data = {
+    eventType,
+    data
+  }
+  userNsp.emit(eventType, data)
+}
 
 export default io;
