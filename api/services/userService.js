@@ -1,5 +1,5 @@
 import {emitEvent, broadcastUserEvent} from "../../connections/socket"
-const User = require("../models/user");
+const User = require("../models/userModel");
 
 exports.create = async function (data) {
   const user = await User.create(data);

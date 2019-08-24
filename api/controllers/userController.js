@@ -1,6 +1,6 @@
 const {validationResult} = require('express-validator')
 const logger = require("../config/logger");
-const User = require("../services/user");
+const User = require("../services/userService");
 const {HTTP_STATUS} = require("../constants/httpStatus");
 const {role} = require("../constants/roles");
 const {getHash, getSalt, compareHash} = require("../helper/crypt")

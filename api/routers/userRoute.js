@@ -1,7 +1,7 @@
 import router from "./index";
-import base from "./base";
-import {validate} from "../middleware/validation/user"
-import * as userController from "./../controllers/user";
+import base from "./baseRoute";
+import {validate} from "../middleware/validation/userValidation"
+import * as userController from "../controllers/userController";
 
 router.get('/users', userController.getUsers);
 router.get('/users/:id', userController.getUser);

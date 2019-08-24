@@ -1,5 +1,5 @@
 const {check} = require('express-validator');
-const User = require("../../services/user")
+const User = require("../../services/userService")
 
 // Validator
 exports.validate = (method) => {

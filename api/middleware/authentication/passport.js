@@ -1,4 +1,4 @@
-const User = require("../../services/user");
+const User = require("../../services/userService");
 const crypt = require("../../helper/crypt");
 
 const passport    = require('passport');

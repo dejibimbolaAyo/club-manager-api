@@ -1,7 +1,7 @@
 import express from "express";
 
 import {appName, address } from './config';
-import userRouter from "./api/routers/user";
+import userRouter from "./api/routers/userRoute";
 
 const server = express();
 
