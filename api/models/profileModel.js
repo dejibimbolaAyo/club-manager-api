@@ -37,6 +37,12 @@ const profileSchema = new Schema({
   }
 });
 
+
+profileSchema.query.byPhone = function (query) {
+    return this.where({phone: query});
+  }
+  
+
 profileSchema.post("create", function (next) {
   next()
 })

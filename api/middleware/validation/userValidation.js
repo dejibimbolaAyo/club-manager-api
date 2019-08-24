@@ -1,5 +1,6 @@
 const {check} = require('express-validator');
 const User = require("../../services/userService")
+const Profile = require("../../services/profileService")
 
 // Validator
 exports.validate = (method) => {
@@ -7,15 +8,6 @@ exports.validate = (method) => {
     case 'createUser':
       {
         return [
-          check('firstName', "Please provide a valid first name")
-            .not()
-            .isEmpty()
-            .isAlpha()
-            .exists(),
-          check('lastName', "Please provide a valid last name")
-            .not()
-            .isEmpty()
-            .exists(),
           check('email', `Invalid email`)
             .exists()
             .withMessage('Email is required')
@@ -23,7 +15,6 @@ exports.validate = (method) => {
             .not()
             .custom(emailExists)
             .withMessage("Email already exists in database"),
-          check('phone').isInt(),
           check('password', "Provide a valid password")
             .exists()
             .withMessage('Password is required')
@@ -52,6 +43,8 @@ exports.validate = (method) => {
             .optional(),
           check('phone', `Please provide a valid phone number`)
             .exists()
+            .trim()
+            .customSanitizer(sanitizePhoneNo)
             .isMobilePhone()
             .not()
             .custom(phoneExists)
@@ -87,4 +80,18 @@ const emailExists = async(email) => {
     return true
   }
   throw 0;
+}
+
+const phoneExists = async(phoneNumber) => {
+  const profile = await Profile.findByPhone(phoneNumber)
+
+  if (profile.status) {
+    return true
+  }
+  throw 0;
+}
+
+const sanitizePhoneNo = (phoneNo) => {
+  // return valid phone number without the + sign
+  return `${phoneNo.replace('+', '')}`
 }
