@@ -14,37 +14,6 @@ exports.create = async function (data) {
   return user;
 };
 
-exports.find = function (query) {
-  const result =  User.find({
-    $or: [
-      {
-        "firstName": {
-          $regex: '.*' + query + '.*',
-          $options: 'gi'
-        }
-      }, {
-        "lastName": {
-          $regex: '.*' + query + '.*',
-          $options: 'gi'
-        }
-      }
-    ]
-  })
-
-  if(!result) {
-    return {
-      status: false,
-      message: "Resutl not found for query"
-    }
-  }
-
-  return {
-    status: true,
-    message: "Result found",
-    data: result
-  }
-}
-
 exports.findOneById = function (query) {
   const user = User.findById(query);
 

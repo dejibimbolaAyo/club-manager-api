@@ -18,17 +18,47 @@ exports.validate = (method) => {
             .exists(),
           check('email', `Invalid email`)
             .exists()
+            .withMessage('Email is required')
             .isEmail()
             .not()
             .custom(emailExists)
             .withMessage("Email already exists in database"),
           check('phone').isInt(),
-          check('password', "Provide a valid email")
+          check('password', "Provide a valid password")
+            .exists()
+            .withMessage('Password is required')
             .not()
             .isEmpty()
             .withMessage('Password cannot be empty')
+            .isLength({min: 6, max: 16})
+            .withMessage("Password shoulld contain a minimum of 6 and a maximum of 16 characters")
+        ]
+      }
+    case 'updateUser':
+      {
+        return [
+          check('firstName', "Please provide a valid first name")
+            .not()
+            .isEmpty()
+            .isAlpha()
+            .exists(),
+          check('lastName', "Please provide a valid last name")
+            .not()
+            .isEmpty()
+            .exists(),
+          check('address', "Please provide a valid address")
+            .not()
+            .isEmpty()
+            .optional(),
+          check('phone', `Please provide a valid phone number`)
             .exists()
-            .withMessage('Password is required')
+            .isMobilePhone()
+            .not()
+            .custom(phoneExists)
+            .withMessage("User with the provided phone number already exists in database"),
+          check('status', "Please provide a valid status")
+            .optional()
+            .isIn(["ACTIVE", "SUSPENDED"])
         ]
       }
     case 'authUser':

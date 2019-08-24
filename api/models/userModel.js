@@ -7,15 +7,6 @@ const userSchema = new Schema({
   role: {
     ref: 'Role',
     type: mongoose.Schema.Types.ObjectId,
-    // required: true
-  },
-  firstName: {
-    type: String,
-    required: true
-  },
-  lastName: {
-    type: String,
-    required: true
   },
   email: {
     type: 'string',
@@ -24,25 +15,10 @@ const userSchema = new Schema({
     trim: true,
     required: true
   },
-  phone: {
-    type: String,
-    unique: true,
-    trim: true,
-    required: true
-  },
-  status: {
-    type: String
-  },
-  language: {
-    ref: 'Language',
-    type: mongoose.Schema.Types.ObjectId
-  },
-  hash: {
-    type: String,
-  },
-  salt: {
-    type: String,
-  }
+  hash: String,
+  salt: String,
+  resetToken: String,
+  resetTokenExpiration: String
 }, {
   timestamps: {
     createdAt: 'created_at',
