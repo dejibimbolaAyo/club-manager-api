@@ -1,4 +1,5 @@
-import {hash, compare, genSaltSync} from "bcrypt";
+const  {hash, compare, genSaltSync} = require("bcrypt");
+
 const saltRounds = 10;
 /**
  * Generate crypt and decrypt
