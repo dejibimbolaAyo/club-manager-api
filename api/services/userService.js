@@ -1,4 +1,4 @@
-import {emitEvent, broadcastUserEvent} from "../../connections/socket"
+const {emitEvent, broadcastUserEvent} = require("../../connections/socket");
 const User = require("../models/userModel");
 
 exports.create = async function (data) {

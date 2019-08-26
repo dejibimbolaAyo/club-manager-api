@@ -1,12 +1,16 @@
-import router from "./index";
-import base from "./baseRoute";
-import {validate} from "../middleware/validation/userValidation"
-import * as userController from "../controllers/userController";
+const {getUsers, getUser, createUser, authenticate, updateUser} = require("../controllers/userController");
+const {validate} = require("../middleware/validation/userValidation");
 
-router.get('/users', userController.getUsers);
-router.get('/users/:id', userController.getUser);
-router.post('/users/create', validate('createUser'), userController.createUser);
-router.post('/users/auth', validate('authUser'), userController.authenticate);
-router.put('/users/:id', base.protectRoute, userController.updateUser);
+module.exports = function userRoutes(router) {
+    router.route('/users')
+        .get(getUsers);
 
-export default router;
+    router.route('/user/:id')
+        .get(getUser);
+
+    router.route('/user/create')
+        .post(validate('createUser'), createUser);
+
+    router.route('/user/auth')
+        .post(validate('authUser'), authenticate);
+};

@@ -23,7 +23,7 @@ let broadcastNsp = io.of('.broadcast')
 userNsp.send('opened', "Connection opened")
 broadcastNsp.send('opened', "Broadcast connection opened")
 
-export const emitEvent = (data, eventType, nameSpace) => {
+exports.emitEvent = (data, eventType, nameSpace) => {
   data = {
     eventType,
     data
@@ -40,12 +40,10 @@ export const emitEvent = (data, eventType, nameSpace) => {
   console.log("Namespace listeners", nsp.getMaxListeners())
 }
 
-export const broadcastUserEvent = (data, eventType, nameSpace) => {
+exports.broadcastUserEvent = (data, eventType, nameSpace) => {
   data = {
     eventType,
     data
   }
   userNsp.emit(eventType, data)
 }
-
-export default io;

@@ -1,4 +1,4 @@
-export const role = {
+exports.role = {
     ADMIN: "admin",
     USER: "user"
 }

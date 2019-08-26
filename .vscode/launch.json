@@ -7,11 +7,20 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Test server",
+            "name": "Test server ES6",
             "program": "${workspaceFolder}\\server.js",
             "outFiles": [
                 "${workspaceRoot}/.compiled/**/*.js"
-            ]
-        }
+            ],
+            "sourceMaps": true
+        },
+        {
+            "name": "Debug Api Test",
+            "type": "node",
+            "request": "launch",
+            "address": "localhost",
+            "port": 9229,
+            "sourceMaps": false
+        },
     ]
 }
