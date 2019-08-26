@@ -4,7 +4,7 @@ dotenv.config();
 
 const express = require('express'),
     app = express(),
-    port = process.env.PORT || 5000;
+    port = process.env.PORT || 5000,
     hostname = process.env.HOSTNAME || 'localhost'
 
 const router = express.Router();
@@ -38,5 +38,5 @@ userRoute(router);
 app.use(router);
 
 app.listen(port, () => {
-    console.info('Be my guest API started on: ' + port);
+    console.info('Be my guest API started on '+ hostname+ ':' + port);
 });
