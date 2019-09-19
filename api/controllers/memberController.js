@@ -48,11 +48,26 @@ exports.declineInvitation = async function (req, res) {
 exports.acceptInvitation = async function (req, res) {
   const {invitationCode} = req.params
 
+  const user = req.user;
+
+    if (!user) {
+      error.message = HTTP_STATUS.UNAUTHORIZED.MESSAGE;
+      logger.error("Broken authentication token");
+      return response.writeJson(res, error, HTTP_STATUS.UNAUTHORIZED.CODE);
+    }
+    const userId = user._id;
+
+    if (!userId) {
+      error.message = HTTP_STATUS.UNAUTHORIZED.MESSAGE;
+      logger.error("Broken authentication token");
+      return response.writeJson(res, error, HTTP_STATUS.UNAUTHORIZED.CODE);
+    }
+
   try {
     // Update invitation
-    const invitation = await Invitation.accept(invitationCode);
+    const invitation = await Invitation.accept(invitationCode, userId);
 
-    success.data = invitation.data;
+    success = invitation;
 
     return response.writeJson(res, success, HTTP_STATUS.OK.CODE)
   } catch (err) {

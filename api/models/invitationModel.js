@@ -10,7 +10,9 @@ const invitationSchema = new Schema({
   },
   memberEmail: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
+    trim: true
   },
   invitationCode: {
     type: String,
