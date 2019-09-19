@@ -63,6 +63,12 @@ userSchema.virtual('memberProfile', {
   foreignField: 'user'
 })
 
+userSchema.virtual('invitations', {
+  ref: 'Invitation',
+  localField: 'email',
+  foreignField: 'memberEmail'
+})
+
 userSchema.methods.toJSON = function() {
   var obj = this.toObject();
   delete obj.hash;

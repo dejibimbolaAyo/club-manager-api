@@ -42,21 +42,16 @@ exports.getMember = async(memberId) => {
   const user = await User
     .findOne(memberId)
     .populate('memberProfile')
+    .populate('invitations')
 
   if (!user) {
     return {status: false, message: "User not found"}
   }
-  // Get member profile const member = await MemberProfile.findOne().where({user:
-  // memberId}) Get member invitations
-  const invitations = await Invitation
-    .find()
-    .byEmail(user.email)
 
   return {
     status: true,
     data: {
-      user,
-      invitations
+      user
     }
   }
 
