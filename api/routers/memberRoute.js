@@ -9,10 +9,10 @@ module.exports = function memberRoutes(router) {
     .put([protectRoute, isMember], updateProfile);
 
   router
-    .route('/invitation/accept')
+    .route('/invitation/:invitationCode')
     .post([protectRoute, isMember], acceptInvitation);
 
   router
-    .route('/invitation/decline')
+    .route('/invitation/:invitationCode')
     .delete([protectRoute, isMember], declineInvitation);
 };

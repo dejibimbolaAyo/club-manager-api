@@ -3,23 +3,29 @@ const mongoose = require(`${appRoot}/database/config/connection`);
 
 var Schema = mongoose.Schema;
 const clubSchema = new Schema({
+
+  admin: {
+    ref: 'Admin',
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
   name: {
     type: String,
     required: true
   },
   email: {
-    type: String,
+    type: String
   },
   phone: {
     type: String,
     unique: true,
-    trim: true,
+    trim: true
   },
   address: {
-    type: String,
+    type: String
   },
   pictureUrl: {
-    type: String,
+    type: String
   }
 }, {
   timestamps: {
@@ -28,11 +34,9 @@ const clubSchema = new Schema({
   }
 });
 
-
 clubSchema.query.byPhone = function (query) {
-    return this.where({phone: query});
-  }
-  
+  return this.where({phone: query});
+}
 
 clubSchema.post("create", function (next) {
   next()

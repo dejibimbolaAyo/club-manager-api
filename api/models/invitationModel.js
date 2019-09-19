@@ -6,10 +6,11 @@ const invitationSchema = new Schema({
   club: {
     ref: 'Club',
     type: mongoose.Schema.Types.ObjectId,
-    // required: true
+    required: true
   },
-  inviteeEmail: {
-    type: String
+  memberEmail: {
+    type: String,
+    required: true
   },
   invitationCode: {
     type: String,

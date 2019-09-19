@@ -66,11 +66,21 @@ exports.update = async (data) => {
 
 // fetch club members statistics
 exports.memberStatistics = async (query) => {
-    const clubMmeber = await MemberClub.findByClubId(query)
+    const clubMembers = await MemberClub.find().byClub(query)
 
-    if(!clubMmeber) {
+    if(!clubMembers) {
       return {status: false, message: `${query} not found.`}
     }
   
-    return {status: true, data: clubMmeber.count()}
+    return {status: true, data: clubMembers.length}
+}
+
+exports.getClubMembers = async (query) => {
+    const clubMembers = await MemberClub.find().byClub(query)
+
+    if(!clubMembers) {
+      return {status: false, message: `${query} not found.`}
+    }
+  
+    return {status: true, data: clubMembers}
 }
