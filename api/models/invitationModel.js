@@ -31,6 +31,10 @@ invitationSchema.query.byInvitationCode = function (query) {
   return this.where({invitationCode: query});
 }
 
+invitationSchema.query.byEmail = function (query) {
+  return this.where({email: query});
+}
+
 invitationSchema.post("create", function (next) {
   next()
 })

@@ -12,7 +12,6 @@ passport.use(new JwtStrategy({
     try {
         // find user
         const user =  await User.findByEmail(payload.sub);
-        console.log("User in passport", user)
         // if user does not exist
         if (!user.status) {
             return done(null, false)

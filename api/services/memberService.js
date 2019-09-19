@@ -1,5 +1,7 @@
 const MemberProfile = require("../models/memberProfileModel");
+const User = require("../models/userModel");
 const MemberClub = require("../models/memberClubModel");
+const Invitation = require("../models/invitationModel");
 
 exports.create = async(data) => {
   const member = await MemberProfile.create({user: data.user, role: data.role});
@@ -35,10 +37,47 @@ exports.find = async(query) => {
   return {status: true, message: "Result found", data: result}
 }
 
+exports.getMember = async(memberId) => {
+  // Get member
+  const user = await User
+    .findOne(memberId)
+    .populate('memberProfile')
+
+  if (!user) {
+    return {status: false, message: "User not found"}
+  }
+  // Get member profile const member = await MemberProfile.findOne().where({user:
+  // memberId}) Get member invitations
+  const invitations = await Invitation
+    .find()
+    .byEmail(user.email)
+
+  return {
+    status: true,
+    data: {
+      user,
+      invitations
+    }
+  }
+
+}
+
 exports.findByPhone = async function (query) {
-  const profile = await Profile
+  const profile = await MemberProfile
     .findOne()
     .byPhone(query);
+
+  if (!profile) {
+    return {status: false, message: `${query} not found.`}
+  }
+
+  return {status: true, data: profile}
+};
+
+exports.findByEmail = async function (query) {
+  const profile = await MemberProfile
+    .findOne()
+    .byEmail(query);
 
   if (!profile) {
     return {status: false, message: `${query} not found.`}

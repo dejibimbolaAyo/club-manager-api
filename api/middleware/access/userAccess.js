@@ -11,7 +11,6 @@ exports.isAdmin = function (req, res, next) {
 }
 
 exports.isMember = function (req, res, next) {
-  console.log(req.user)
   if (req.user.role !== role.MEMBER) {
     res.status(HTTP_STATUS.UNAUTHORIZED.CODE)
     res.end(`${HTTP_STATUS.UNAUTHORIZED.MESSAGE} as a member.`)

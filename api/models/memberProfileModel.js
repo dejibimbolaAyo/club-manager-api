@@ -19,13 +19,13 @@ const memberProfileSchema = new Schema({
   phone: {
     type: String,
     unique: true,
-    trim: true,
+    trim: true
   },
   address: {
-    type: String,
+    type: String
   },
   pictureUrl: {
-    type: String,
+    type: String
   },
   gender: {
     type: String
@@ -37,11 +37,13 @@ const memberProfileSchema = new Schema({
   }
 });
 
-
 memberProfileSchema.query.byPhone = function (query) {
-    return this.where({phone: query});
-  }
-  
+  return this.where({phone: query});
+}
+
+memberProfileSchema.query.byEmail = function (query) {
+  return this.where({email: query});
+}
 
 memberProfileSchema.post("create", function (next) {
   next()

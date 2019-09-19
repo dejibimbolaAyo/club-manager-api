@@ -4,10 +4,6 @@ const crypt = require("../helper/crypt");
 
 var Schema = mongoose.Schema;
 const userSchema = new Schema({
-  // role: {
-  //   ref: 'Role',
-  //   type: mongoose.Schema.Types.ObjectId,
-  // },
   role: {
     type: String,
   },
@@ -18,8 +14,12 @@ const userSchema = new Schema({
     trim: true,
     required: true
   },
-  hash: String,
-  salt: String,
+  hash: {
+    type: String
+  },
+  salt: {
+    type: String
+  },
   resetToken: String,
   resetTokenExpiration: String
 }, {
@@ -56,6 +56,19 @@ userSchema
   .get(function () {
     return this._id;
   });
+
+userSchema.virtual('memberProfile', {
+  ref: 'MemberProfile',
+  localField: '_id',
+  foreignField: 'user'
+})
+
+userSchema.methods.toJSON = function() {
+  var obj = this.toObject();
+  delete obj.hash;
+  delete obj.salt;
+  return obj;
+ }
 
 userSchema.set('toJSON', {virtuals: true});
 userSchema.set('toObject', {virtuals: true});

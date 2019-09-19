@@ -53,7 +53,6 @@ exports.sendMail = function sendEmail(to, subject, templateName, templateVariabl
           logger.error(`error occured sending mail ${error}`);
           reject(error);
         }
-        console.log("Email information", info)
         resolve(info);
       });
     });
