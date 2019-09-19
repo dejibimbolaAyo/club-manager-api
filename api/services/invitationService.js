@@ -19,22 +19,21 @@ exports.create = async (data) => {
 }
 
 // Accept invitation
-exports.accept = async (data) => {
-  const invitation = await Invitation.findByInvitationCode(data.invitationCode);
+exports.accept = async (invitationCode) => {
+  const invitation = await Invitation.findOne().byInvitationCode(invitationCode);
 
   if (!invitation) {
     return {status: false, message: `${query} not found.`}
   }
 
-  invitation.accepted = true;
-  invitation.save()
+  invitation.updateOne({accepted: true})
 
   return {status: true, data: invitation}
 }
 
 // Decline invitation
-exports.decline = async (data) => {
-    const invitation = await Invitation.findByInvitationCode(data.invitationCode);
+exports.decline = async (invitationCode) => {
+    const invitation = await Invitation.findOne().byInvitationCode(invitationCode);
 
     if (!invitation) {
       return {status: false, message: `${query} not found.`}

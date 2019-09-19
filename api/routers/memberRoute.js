@@ -18,7 +18,7 @@ module.exports = function memberRoutes(router) {
 
   router
     .route('/invitation/:invitationCode')
-    .post([
+    .get([
       protectRoute, isMember
     ], acceptInvitation);
 

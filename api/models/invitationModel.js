@@ -19,6 +19,9 @@ const invitationSchema = new Schema({
   },
   expiry: {
     type: String
+  },
+  accepted: {
+      type: Boolean
   }
 }, {
   timestamps: {

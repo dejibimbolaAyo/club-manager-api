@@ -20,7 +20,7 @@ exports.declineInvitation = async function (req, res) {
       return response.writeJson(res, error, 422)
     }
 
-    const invitation = await Invitation.findOneByInvitationCode(data);
+    const invitation = await Invitation.decline(data);
 
     invitation.delete();
 
@@ -46,23 +46,13 @@ exports.declineInvitation = async function (req, res) {
    */
 
 exports.acceptInvitation = async function (req, res) {
-  const data = req.body
+  const {invitationCode} = req.params
 
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      error.data = errors.array()
-      return response.writeJson(res, error, 422)
-    }
-
     // Update invitation
-    const invitation = await Invitation.findByInvitationCode(data);
+    const invitation = await Invitation.accept(invitationCode);
 
-    invitation.accepted = true;
-
-    invitation.save();
-
-    success.data = invitation;
+    success.data = invitation.data;
 
     return response.writeJson(res, success, HTTP_STATUS.OK.CODE)
   } catch (err) {
