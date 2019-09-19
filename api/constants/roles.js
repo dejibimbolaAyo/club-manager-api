@@ -1,4 +1,4 @@
 exports.role = {
-    ADMIN: "admin",
-    USER: "user"
+    ADMIN: "ADMIN",
+    MEMBER: "MEMBER"
 }

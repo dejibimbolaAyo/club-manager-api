@@ -4,9 +4,12 @@ const crypt = require("../helper/crypt");
 
 var Schema = mongoose.Schema;
 const userSchema = new Schema({
+  // role: {
+  //   ref: 'Role',
+  //   type: mongoose.Schema.Types.ObjectId,
+  // },
   role: {
-    ref: 'Role',
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
   },
   email: {
     type: 'string',
@@ -57,4 +60,4 @@ userSchema
 userSchema.set('toJSON', {virtuals: true});
 userSchema.set('toObject', {virtuals: true});
 
-module.exports = mongoose.model('User', userSchema, 'users');
+module.exports = mongoose.model('User', userSchema, 'user');

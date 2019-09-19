@@ -1,6 +1,10 @@
 const {validationResult} = require('express-validator')
 const logger = require("../config/logger");
+
 const User = require("../services/userService");
+const Member = require("../services/memberService");
+const Admin = require("../services/adminService");
+
 const {HTTP_STATUS} = require("../constants/httpStatus");
 const {role} = require("../constants/roles");
 const {getHash, getSalt, compareHash} = require("../helper/crypt")
@@ -33,7 +37,10 @@ exports.authenticate = async function (req, res) {
         message: user.message
       };
       logger.error(error);
-      return response.writeJson(res, error, HTTP_STATUS.NOT_FOUND.CODE)
+      return response.writeJson(res, {
+        message: error.message,
+        status: false
+      }, HTTP_STATUS.NOT_FOUND.CODE)
     }
 
     user = user.data
@@ -53,7 +60,10 @@ exports.authenticate = async function (req, res) {
       status: false,
       message: "Incorrect password or email"
     }
-    return response.writeJson(res, error, HTTP_STATUS.FORBIDDEN.CODE)
+    return response.writeJson(res, {
+      message: error.message,
+      status: false
+    }, HTTP_STATUS.FORBIDDEN.CODE)
 
   } catch (err) {
     logger.log("error", `Error occured while authenticating, ${err}`);
@@ -61,7 +71,7 @@ exports.authenticate = async function (req, res) {
       status: false,
       message: err.message || err._message
     }
-    return response.writeJson(res, err, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE)
+    return response.writeJson(res, error, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE)
   }
 };
 
@@ -69,6 +79,7 @@ exports.authenticate = async function (req, res) {
  * Get users
  */
 exports.getUsers = async function (req, res) {
+
   try {
     const users = await User.findAll();
 
@@ -82,7 +93,10 @@ exports.getUsers = async function (req, res) {
   } catch (err) {
     logger.log("error", `Error occured, ${err}`);
     error.message = err.message || err._message;
-    return response.writeJson(res, err, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE)
+    return response.writeJson(res, {
+      message: error.message,
+      status: false
+    }, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE)
   }
 }
 
@@ -105,15 +119,19 @@ exports.find = async function (req, res) {
   } catch (err) {
     logger.log("error", `Error occured, ${err}`);
     error.message = err.message || err._message;
-    return response.writeJson(res, err, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE)
+    return response.writeJson(res, {
+      message: error.message,
+      status: false
+    }, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE)
   }
 }
 
 /**
- * Create user
+ * Create member
  */
-exports.createUser = async function (req, res) {
-  const data = req.body
+exports.createMember = async function (req, res) {
+  let data = req.body
+  data.role = "MEMBER"
 
   try {
     const errors = validationResult(req);
@@ -122,23 +140,76 @@ exports.createUser = async function (req, res) {
       return response.writeJson(res, error, 422)
     }
 
+    let member = {}
     const user = await User.create(data);
 
-    success.data = user;
+    if (user.status) {
+      // create member profile with basic details to be updated later
+      member = await Member.create({
+        user: user.data._id
+      })
+    }
+
+    success.data = {
+      user:user.data,
+      member: member.data
+    };
+
     return response.writeJson(res, success, HTTP_STATUS.OK.CODE)
   } catch (err) {
     logger.log("error", `Error occured, ${err}`);
     error.message = err.message || err._message;
-    return response.writeJson(res, error, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE)
+    return response.writeJson(res, {
+      message: error.message,
+      status: false
+    }, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE)
+  }
+}
+/**
+ * Create admin
+ */
+exports.createAdmin = async function (req, res) {
+  let data = req.body
+  data.role = "ADMIN"
+
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      error.data = errors.array()
+      return response.writeJson(res, error, 422)
+    }
+
+    let admin = {}
+    const user = await User.create(data);
+
+    if (user.status) {
+      // create admin profile
+      admin = await Admin.create({
+        user: user.data._id
+      });
+    }
+
+    success.data = {
+      user:user.data,
+      admin: admin.data
+    };
+    return response.writeJson(res, success, HTTP_STATUS.OK.CODE)
+  } catch (err) {
+    logger.log("error", `Error occured, ${err}`);
+    error.message = err.message || err._message;
+    return response.writeJson(res, {
+      message: error.message,
+      status: false
+    }, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE)
   }
 }
 
 /**
- * Update user details
+ * Delete member
  */
-exports.updateUser = async function (req, res) {}
+exports.deleteMember = async function (req, res) {}
 
 /**
- * Delete user
+ * Delete admin
  */
-exports.deleteUser = async function (req, res) {}
+exports.deleteAdmin = async function (req, res) {}

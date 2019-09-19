@@ -1,7 +1,7 @@
 const {emitEvent, broadcastUserEvent} = require("../../connections/socket");
 const User = require("../models/userModel");
 
-exports.create = async function (data) {
+exports.create = async (data) => {
   const user = await User.create(data);
 
   // Generate salt
@@ -11,11 +11,14 @@ exports.create = async function (data) {
   user.save();
   broadcastUserEvent(user, 'newMember', '/users')
 
-  return user;
+  return {
+    status: true,
+    data: user
+  };
 };
 
-exports.findOneById = function (query) {
-  const user = User.findById(query);
+exports.findOneById = async (query) => {
+  const user = await User.findById(query);
 
   if(!user) {
     return {
@@ -30,7 +33,7 @@ exports.findOneById = function (query) {
   }
 };
 
-exports.findByEmail = async function (query) {
+exports.findByEmail = async (query) => {
   const user = await User.findOne().byEmail(query);
 
   if(!user) {
@@ -46,7 +49,7 @@ exports.findByEmail = async function (query) {
   }
 };
 
-exports.findAll = async function (query) {
+exports.findAll = async (query) => {
   const users = await User.find(query);
 
   if(!users) {

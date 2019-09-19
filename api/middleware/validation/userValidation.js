@@ -1,6 +1,6 @@
 const {check} = require('express-validator');
 const User = require("../../services/userService")
-const Profile = require("../../services/profileService")
+const Member = require("../../services/memberService")
 
 // Validator
 exports.validate = (method) => {
@@ -83,9 +83,9 @@ const emailExists = async(email) => {
 }
 
 const phoneExists = async(phoneNumber) => {
-  const profile = await Profile.findByPhone(phoneNumber)
+  const member = await Member.findByPhone(phoneNumber)
 
-  if (profile.status) {
+  if (member.status) {
     return true
   }
   throw 0;

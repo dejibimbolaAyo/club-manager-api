@@ -16,6 +16,9 @@ const morgan = require('morgan');
 
 const winston = require("./api/config/logger");
 const userRoute = require("./api/routers/userRoute");
+const adminRoute = require("./api/routers/adminRoute");
+const clubRoute = require("./api/routers/clubRoute");
+const memberRoute = require("./api/routers/memberRoute");
 
 
 app.use(cors());
@@ -34,9 +37,12 @@ require(`${appRoot}/api/middleware/authentication/passport`)
 
 // init route
 userRoute(router);
+adminRoute(router);
+clubRoute(router);
+memberRoute(router);
 
 app.use(router);
 
 app.listen(port, () => {
-    console.info('Be my guest API started on '+ hostname+ ':' + port);
+    console.info('Tradedepot API started on '+ hostname+ ':' + port);
 });
