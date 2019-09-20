@@ -18,13 +18,36 @@ exports.create = async (data) => {
 };
 
 exports.findOneById = async (query) => {
-  const user = await User.findById(query);
+  let user = await User.findOne({_id: query}).populate('adminProfile').populate('memberProfile').exec();
 
   if(!user) {
     return {
       status: false,
       message: `${query} not found.`
     }
+  }
+
+  console.log("uodsufodadf", user)
+
+  if(user.role === "ADMIN") {
+    user = user.toObject();
+    user.profile = user.adminProfile
+    delete user.hash;
+    delete user.salt;
+    delete user.memberProfile;
+    delete user.adminProfile;
+  }
+
+  if(user.role === "MEMBER") {
+    // user = await user.populate('memberProfile').exec()
+    user = user.toObject();
+    user.profile = user.memberProfile
+    delete user.hash;
+    delete user.salt;
+    delete user.adminProfile;
+    delete user.memberProfile;
+
+    console.log(user);
   }
 
   return {

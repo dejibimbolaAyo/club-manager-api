@@ -103,7 +103,39 @@ exports.getUsers = async function (req, res) {
 /**
  * Get user details
  */
-exports.getUser = async function (req, res) {}
+exports.getUser = async function (req, res) {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      error.message = HTTP_STATUS.UNAUTHORIZED.MESSAGE;
+      logger.error("Broken authentication token");
+      return response.writeJson(res, error, HTTP_STATUS.UNAUTHORIZED.CODE);
+    }
+    const userId = user._id;
+
+    if (!userId) {
+      error.message = HTTP_STATUS.UNAUTHORIZED.MESSAGE;
+      logger.error("Broken authentication token");
+      return response.writeJson(res, error, HTTP_STATUS.UNAUTHORIZED.CODE);
+    }
+
+    const userDetails = await User.findOneById(userId)
+
+    if (!userDetails.status) {
+      error.message = `An error occured while fetching user details, ${userDetails.message}`;
+      logger.error(error.message);
+      return response.writeJson(res, error, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE);
+    }
+
+    success = userDetails;
+    return response.writeJson(res, success, HTTP_STATUS.OK.CODE);
+
+  } catch (error) {
+    logger.error(`Error occured while updating user ${error.message}`);
+    return response.writeJson(res, error.message, HTTP_STATUS.INTERNAL_SERVER_ERROR.CODE);
+  }
+}
 
 exports.find = async function (req, res) {
   const {query} = req.params

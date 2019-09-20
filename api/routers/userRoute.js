@@ -5,7 +5,8 @@ const {
   createMember,
   authenticate,
   deleteAdmin,
-  deleteMember
+  deleteMember,
+  getUserWithToken
 } = require("../controllers/userController");
 const {validate} = require("../middleware/validation/userValidation");
 
@@ -18,8 +19,8 @@ module.exports = function userRoutes(router) {
     .get(getUsers);
 
   router
-    .route('/user/:id')
-    .get(getUser);
+    .route('/user')
+    .get([protectRoute], getUser);
 
   router
     .route('/user/admin')

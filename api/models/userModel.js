@@ -63,6 +63,12 @@ userSchema.virtual('memberProfile', {
   foreignField: 'user'
 })
 
+userSchema.virtual('adminProfile', {
+  ref: 'Admin',
+  localField: '_id',
+  foreignField: 'user'
+})
+
 userSchema.virtual('invitations', {
   ref: 'Invitation',
   localField: 'email',
